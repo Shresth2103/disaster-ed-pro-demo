@@ -490,105 +490,84 @@
 
     <!-- Firebase SDK & App Logic (module) -->
     <script type="module">
-        // Firebase imports
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-        import { getFirestore, doc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-        // --- Replace with your own Firebase project if needed ---
-        const firebaseConfig = {
-            apiKey: 'AIzaSyBK9TZzazFtV26JcjQUngrEdsyw87f1uXc',
-            authDomain: 'disastered-pro-demo.firebaseapp.com',
-            projectId: 'disastered-pro-demo',
-            storageBucket: 'disastered-pro-demo.appspot.com',
-            messagingSenderId: '750943106849',
-            appId: '1:750943106849:web:09ae61b28c4c964c887060',
-            measurementId: 'G-C8C2DCF7T0'
-        };
+  // ✅ Correct Firebase config
+  const firebaseConfig = {
+    apiKey: "AIzaSyBK9TZzazFtV26JcjQUngrEdsyw87f1uXc",
+    authDomain: "disastered-pro-demo.firebaseapp.com",
+    projectId: "disastered-pro-demo",
+    storageBucket: "disastered-pro-demo.appspot.com",  // fixed
+    messagingSenderId: "750943106849",
+    appId: "1:750943106849:web:09ae61b28c4c964c887060",
+    measurementId: "G-C8C2DCF7T0"
+  };
 
-        // Init Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
 
-        // Make helpers globally available to inline onclick handlers
-        window.saveModuleProgress = async (moduleName, score) => {
-            const user = auth.currentUser;
-            if (!user) { alert('⚠️ Please login first!'); return; }
-            try {
-                await setDoc(doc(db, 'progress', user.uid), { [moduleName]: score, updatedAt: new Date() }, { merge: true });
-                console.log('✅ Progress saved:', moduleName, score);
-                await window.loadStudentDashboard();
-            } catch (err) {
-                console.error(err); alert('❌ Could not save progress. Check console for details.');
-            }
-        };
+  // --- Modal helpers ---
+  window.openModal = (id) => {
+    document.getElementById(id).style.display = "block";
+  };
+  window.closeModal = (id) => {
+    document.getElementById(id).style.display = "none";
+  };
 
-        window.loadStudentDashboard = async () => {
-            const user = auth.currentUser; if (!user) return;
-            const docRef = doc(db, 'progress', user.uid);
-            const snap = await getDoc(docRef);
-            const data = snap.exists() ? snap.data() : {};
-            const score = (data.fireSafety || 0) + '%';
-            const badges = data.badges || 0;
-            const modules = data.modules || 0;
-            const scoreEl = document.getElementById('preparednessScore');
-            const badgesEl = document.getElementById('badgesEarned');
-            const modulesEl = document.getElementById('modulesCompleted');
-            if (scoreEl) scoreEl.textContent = score;
-            if (badgesEl) badgesEl.textContent = badges;
-            if (modulesEl) modulesEl.textContent = modules;
-        };
+  // --- Sign up ---
+  window.handleSignup = async () => {
+    const email = document.getElementById("loginEmail").value;
+    const password = document.getElementById("loginPassword").value;
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      alert("✅ Signed up as " + email);
+      closeModal("loginModal");
+    } catch (err) {
+      alert("❌ " + err.message);
+    }
+  };
 
-        // Handle login/signup submit from the same form depending on mode
-        window.handleLogin = async (event) => {
-            event.preventDefault();
-            const email = document.getElementById('loginEmail').value.trim();
-            const password = document.getElementById('loginPassword').value;
-            const submitBtn = document.getElementById('authSubmitBtn');
-            const prev = submitBtn.textContent;
-            submitBtn.disabled = true; submitBtn.textContent = 'Please wait...';
-            try {
-                const isSignup = document.getElementById('authSubmitBtn').textContent.toLowerCase().includes('up');
-                if (isSignup) {
-                    await createUserWithEmailAndPassword(auth, email, password);
-                    alert('✅ Signed up as ' + email);
-                } else {
-                    await signInWithEmailAndPassword(auth, email, password);
-                    alert('🎓 Welcome ' + email);
-                }
-                closeModal('loginModal');
-                await window.loadStudentDashboard();
-            } catch (err) {
-                alert('❌ ' + err.message);
-            } finally {
-                submitBtn.disabled = false; submitBtn.textContent = prev;
-            }
-        };
+  // --- Login ---
+  window.handleLogin = async (event) => {
+    event.preventDefault();
+    const email = document.getElementById("loginEmail").value;
+    const password = document.getElementById("loginPassword").value;
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      alert("🎓 Welcome " + email);
+      closeModal("loginModal");
+    } catch (err) {
+      alert("❌ " + err.message);
+    }
+  };
 
-        window.handleLogout = async () => {
-            await signOut(auth);
-            alert('👋 Logged out');
-            const scoreEl = document.getElementById('preparednessScore');
-            const badgesEl = document.getElementById('badgesEarned');
-            const modulesEl = document.getElementById('modulesCompleted');
-            if (scoreEl) scoreEl.textContent = '85%'; // default demo values
-            if (badgesEl) badgesEl.textContent = '12';
-            if (modulesEl) modulesEl.textContent = '7';
-            const loginCta = document.getElementById('loginCta');
-            if (loginCta) loginCta.textContent = 'Login';
-        };
+  // --- Save demo/module progress ---
+  window.saveModuleProgress = async (moduleName, score) => {
+    const user = auth.currentUser;
+    if (!user) {
+      alert("⚠️ Please login first!");
+      return;
+    }
+    try {
+      await setDoc(
+        doc(db, "progress", user.uid),
+        { [moduleName]: score, updatedAt: new Date() },
+        { merge: true }
+      );
+      alert("✅ Progress saved for " + moduleName);
+    } catch (err) {
+      console.error(err);
+      alert("❌ Failed to save progress");
+    }
+  };
 
-        // Reflect auth state in UI
-        onAuthStateChanged(auth, async (user) => {
-            const loginCta = document.getElementById('loginCta');
-            if (user) {
-                if (loginCta) loginCta.textContent = 'Account';
-                await window.loadStudentDashboard();
-            } else {
-                if (loginCta) loginCta.textContent = 'Login';
-            }
-        });
-    </script>
-</body>
-</html>
+  // --- Logout ---
+  window.handleLogout = async () => {
+    await signOut(auth);
+    alert("👋 Logged out");
+  };
+</script>
