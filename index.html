@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DisasterED Pro - Disaster Preparedness Education</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        main {
+            padding-top: 100px;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease-out 0.2s both;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease-out 0.4s both;
+        }
+
+        .features {
+            background: white;
+            padding: 5rem 0;
+            margin-top: 2rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            cursor: pointer;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .demo-section {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            padding: 5rem 0;
+            color: white;
+            text-align: center;
+        }
+
+        .demo-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 800px;
+            color: #333;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+        }
+
+        .simulation-demo {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 1rem 0;
+            border-left: 5px solid #667eea;
+        }
+
+        .progress-bar {
+            background: #e2e8f0;
+            border-radius: 10px;
+            height: 10px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 2s ease;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            display: block;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .close {
+            float: right;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .close:hover {
+            color: #333;
+        }
+
+        .quiz-container {
+            margin: 1rem 0;
+        }
+
+        .quiz-option {
+            background: #f8fafc;
+            margin: 0.5rem 0;
+            padding: 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-option:hover {
+            background: #e2e8f0;
+            border-color: #667eea;
+        }
+
+        .quiz-option.correct {
+            background: #dcfce7;
+            border-color: #22c55e;
+        }
+
+        .quiz-option.incorrect {
+            background: #fef2f2;
+            border-color: #ef4444;
+        }
+
+        footer {
+            background: #1e293b;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">🚨 DisasterED Pro</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#demo">Demo</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+            <a href="#" class="btn" onclick="openModal('loginModal')">Login</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero" id="home">
+            <div class="container">
+                <h1>Master Disaster Preparedness Through Interactive Learning</h1>
+                <p>Transforming disaster education from boring theory to engaging, life-saving skills for students across India</p>
+                <div class="cta-buttons">
+                    <a href="#" class="btn pulse" onclick="openModal('demoModal')">Try Live Demo</a>
+                    <a href="#features" class="btn" style="background: transparent; border: 2px solid white;">Learn More</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="features" id="features">
+            <div class="container">
+                <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 1rem; color: #333;">Core Features</h2>
+                <p style="text-align: center; font-size: 1.2rem; color: #666; margin-bottom: 3rem;">Comprehensive disaster preparedness training designed specifically for Indian schools and colleges</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card" onclick="showFeatureDemo('simulations')">
+                        <div class="feature-icon">🌍</div>
+                        <h3>Interactive Simulations</h3>
+                        <p>Immersive earthquake, fire, and flood scenarios that teach students how to respond in real emergencies</p>
+                        <small style="color: #667eea; font-weight: bold;">Click to see demo</small>
+                    </div>
+                    <div class="feature-card" onclick="showFeatureDemo('gamification')">
+                        <div class="feature-icon">🎮</div>
+                        <h3>Gamified Learning</h3>
+                        <p>Badges, leaderboards, and progress tracking make disaster preparedness engaging and memorable</p>
+                        <small style="color: #667eea; font-weight: bold;">Click to see demo</small>
+                    </div>
+                    <div class="feature-card" onclick="showFeatureDemo('mobile')">
+                        <div class="feature-icon">📱</div>
+                        <h3>Mobile-First Design</h3>
+                        <p>Works seamlessly on smartphones, tablets, and computers - accessible anywhere, anytime</p>
+                        <small style="color: #667eea; font-weight: bold;">Click to see demo</small>
+                    </div>
+                    <div class="feature-card" onclick="showFeatureDemo('certification')">
+                        <div class="feature-icon">🏆</div>
+                        <h3>Certification System</h3>
+                        <p>Digital certificates and assessments track student progress and knowledge retention</p>
+                        <small style="color: #667eea; font-weight: bold;">Click to see demo</small>
+                    </div>
+                    <div class="feature-card" onclick="showFeatureDemo('analytics')">
+                        <div class="feature-icon">📊</div>
+                        <h3>Teacher Dashboard</h3>
+                        <p>Comprehensive analytics help educators track class progress and identify knowledge gaps</p>
+                        <small style="color: #667eea; font-weight: bold;">Click to see demo</small>
+                    </div>
+                    <div class="feature-card" onclick="showFeatureDemo('localization')">
+                        <div class="feature-icon">🌐</div>
+                        <h3>Localized Content</h3>
+                        <p>Region-specific disasters and multilingual support (English, Hindi, regional languages)</p>
+                        <small style="color: #667eea; font-weight: bold;">Click to see demo</small>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="demo-section" id="demo">
+            <div class="container">
+                <h2 style="font-size: 2.5rem; margin-bottom: 2rem;">Experience the Platform</h2>
+                
+                <div class="demo-container">
+                    <h3 style="color: #667eea; margin-bottom: 1rem;">Student Dashboard Preview</h3>
+                    
+                    <div class="stats">
+                        <div class="stat-card" style="background: rgba(102, 126, 234, 0.1); color: #333;">
+                            <span class="stat-number">85%</span>
+                            <span>Preparedness Score</span>
+                        </div>
+                        <div class="stat-card" style="background: rgba(118, 75, 162, 0.1); color: #333;">
+                            <span class="stat-number">12</span>
+                            <span>Badges Earned</span>
+                        </div>
+                        <div class="stat-card" style="background: rgba(34, 197, 94, 0.1); color: #333;">
+                            <span class="stat-number">7</span>
+                            <span>Modules Completed</span>
+                        </div>
+                    </div>
+
+                    <div class="simulation-demo">
+                        <h4>🔥 Fire Safety Module - Progress</h4>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 75%"></div>
+                        </div>
+                        <p><strong>Current Topic:</strong> Evacuation Route Planning</p>
+                        <p><strong>Next:</strong> Fire Extinguisher Usage</p>
+                        <button class="btn" style="margin-top: 1rem;" onclick="startSimulation()">Continue Learning</button>
+                    </div>
+
+                    <div class="simulation-demo">
+                        <h4>🌊 Flood Response Module</h4>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 45%"></div>
+                        </div>
+                        <p><strong>Status:</strong> In Progress</p>
+                        <p><strong>Next Milestone:</strong> Emergency Kit Preparation</p>
+                        <button class="btn" style="margin-top: 1rem; background: #64748b;" onclick="openModal('floodQuiz')">Take Assessment</button>
+                    </div>
+                </div>
+
+                <div style="margin-top: 3rem;">
+                    <button class="btn" onclick="openModal('demoModal')" style="font-size: 1.2rem; padding: 1rem 2rem;">🚀 Try Interactive Demo</button>
+                </div>
+            </div>
+        </section>
+
+        <section style="background: white; padding: 5rem 0;" id="about">
+            <div class="container">
+                <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 3rem; color: #333;">Why DisasterED Pro?</h2>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+                    <div style="text-align: center;">
+                        <h3 style="color: #667eea; margin-bottom: 1rem;">📈 Proven Impact</h3>
+                        <p>85% improvement in disaster preparedness knowledge retention compared to traditional methods</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <h3 style="color: #667eea; margin-bottom: 1rem;">🎯 Targeted Solution</h3>
+                        <p>Specifically designed for Indian educational institutions with localized disaster scenarios</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <h3 style="color: #667eea; margin-bottom: 1rem;">🔄 Scalable Platform</h3>
+                        <p>Easily deployable across schools nationwide with minimal infrastructure requirements</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Demo Modal -->
+    <div id="demoModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('demoModal')">&times;</span>
+            <h2 style="color: #667eea; margin-bottom: 1rem;">🔥 Fire Safety Simulation</h2>
+            <p style="margin-bottom: 1rem;"><strong>Scenario:</strong> You're in your classroom when the fire alarm rings. What's your first action?</p>
+            
+            <div class="quiz-container">
+                <div class="quiz-option" onclick="selectOption(this, false)">🏃‍♂️ Run to the nearest exit immediately</div>
+                <div class="quiz-option" onclick="selectOption(this, false)">📱 Call your parents first</div>
+                <div class="quiz-option" onclick="selectOption(this, true)">✋ Stop, listen to teacher's instructions, and follow evacuation protocol</div>
+                <div class="quiz-option" onclick="selectOption(this, false)">🎒 Pack your belongings quickly</div>
+            </div>
+            
+            <div id="quiz-feedback" style="margin-top: 1rem; font-weight: bold; display: none;"></div>
+            <button class="btn" onclick="nextSimulation()" style="margin-top: 1rem; display: none;" id="nextBtn">Next Scenario →</button>
+        </div>
+    </div>
+
+    <!-- Flood Quiz Modal -->
+    <div id="floodQuiz" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('floodQuiz')">&times;</span>
+            <h2 style="color: #667eea; margin-bottom: 1rem;">🌊 Flood Preparedness Assessment</h2>
+            <p style="margin-bottom: 1rem;"><strong>Question:</strong> What should be in your emergency kit for flood preparedness?</p>
+            
+            <div class="quiz-container">
+                <div class="quiz-option" onclick="selectOption(this, false)">🍫 Snacks and drinks only</div>
+                <div class="quiz-option" onclick="selectOption(this, true)">💧 Water, first aid, flashlight, battery radio, emergency contacts</div>
+                <div class="quiz-option" onclick="selectOption(this, false)">📚 School books and laptop</div>
+                <div class="quiz-option" onclick="selectOption(this, false)">🎮 Games and entertainment</div>
+            </div>
+            
+            <div id="flood-feedback" style="margin-top: 1rem; font-weight: bold; display: none;"></div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('loginModal')">&times;</span>
+            <h2 style="color: #667eea; margin-bottom: 1rem;">Login to DisasterED Pro</h2>
+            
+            <form style="display: flex; flex-direction: column; gap: 1rem;">
+                <input type="email" placeholder="Email Address" style="padding: 1rem; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1rem;">
+                <input type="password" placeholder="Password" style="padding: 1rem; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1rem;">
+                <button type="submit" class="btn" onclick="handleLogin(event)">Sign In</button>
+            </form>
+            
+            <p style="text-align: center; margin-top: 1rem; color: #666;">
+                New user? <a href="#" style="color: #667eea;">Create Account</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Feature Demo Modal -->
+    <div id="featureModal" class="modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <span class="close" onclick="closeModal('featureModal')">&times;</span>
+            <div id="featureContent">
+                <!-- Content will be dynamically loaded -->
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 DisasterED Pro - Smart India Hackathon 2025 Project</p>
+            <p>Developed by AlgoAces | Problem Statement: SIH25008</p>
+        </div>
+    </footer>
+
+    <script>
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function selectOption(element, isCorrect) {
+            // Reset all options
+            const options = element.parentNode.querySelectorAll('.quiz-option');
+            options.forEach(opt => {
+                opt.classList.remove('correct', 'incorrect');
+                opt.style.pointerEvents = 'none';
+            });
+
+            // Mark selected option
+            if (isCorrect) {
+                element.classList.add('correct');
+                showFeedback('✅ Correct! Following teacher instructions ensures orderly evacuation and everyone\'s safety.', 'green');
+            } else {
+                element.classList.add('incorrect');
+                // Find and highlight correct answer
+                options.forEach(opt => {
+                    if (opt.onclick.toString().includes('true')) {
+                        opt.classList.add('correct');
+                    }
+                });
+                showFeedback('❌ Not quite right. Always follow your teacher\'s evacuation instructions for safety.', 'red');
+            }
+
+            document.getElementById('nextBtn').style.display = 'inline-block';
+        }
+
+        function showFeedback(message, color) {
+            const feedback = document.getElementById('quiz-feedback');
+            feedback.textContent = message;
+            feedback.style.color = color;
+            feedback.style.display = 'block';
+        }
+
+        function nextSimulation() {
+            alert('🎉 Great job! In the full platform, you\'d continue to the next disaster scenario. Your progress has been saved!');
+            closeModal('demoModal');
+        }
+
+        function startSimulation() {
+            alert('🔥 Fire Safety Simulation Starting...\n\nIn the full version, this would launch an interactive 3D simulation where you navigate through evacuation procedures!');
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            alert('🎓 Welcome to DisasterED Pro!\n\nIn the full platform, you\'d access your personalized dashboard with all your courses, progress, and achievements.');
+            closeModal('loginModal');
+        }
+
+        function showFeatureDemo(feature) {
+            const content = document.getElementById('featureContent');
+            const demoContent = {
+                'simulations': `
+                    <h2 style="color: #667eea; margin-bottom: 1rem;">🌍 Interactive Simulations Demo</h2>
+                    <div style="background: #f8fafc; padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
+                        <h3>🔥 Fire Evacuation Simulation</h3>
+                        <p><strong>Scenario:</strong> School fire alarm activated</p>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+                            <div style="background: white; padding: 1rem; border-radius: 8px; border-left: 4px solid #ef4444;">
+                                <strong>Step 1:</strong> Stop current activity<br>
+                                <small>✅ Completed in 2 seconds</small>
+                            </div>
+                            <div style="background: white; padding: 1rem; border-radius: 8px; border-left: 4px solid #f59e0b;">
+                                <strong>Step 2:</strong> Listen to instructions<br>
+                                <small>⏳ In progress...</small>
+                            </div>
+                        </div>
+                        <button class="btn" onclick="alert('🎮 In the full version, this would launch a 3D interactive simulation!')">Launch 3D Simulation</button>
+                    </div>
+                `,
+                'gamification': `
+                    <h2 style="color: #667eea; margin-bottom: 1rem;">🎮 Gamified Learning Demo</h2>
+                    <div style="background: #f8fafc; padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
+                        <h3>Student Achievement System</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                            <div style="text-align: center; padding: 1rem; background: white; border-radius: 8px;">
+                                <div style="font-size: 2rem;">🏅</div>
+                                <strong>Fire Safety Expert</strong><br>
+                                <small>Earned: Dec 2024</small>
+                            </div>
+                            <div style="text-align: center; padding: 1rem; background: white; border-radius: 8px;">
+                                <div style="font-size: 2rem;">🌊</div>
+                                <strong>Flood Response Pro</strong><br>
+                                <small>75% Progress</small>
+                            </div>
+                            <div style="text-align: center; padding: 1rem; background: white; border-radius: 8px; opacity: 0.6;">
+                                <div style="font-size: 2rem;">🌍</div>
+                                <strong>Earthquake Master</strong><br>
+                                <small>Locked</small>
+                            </div>
+                        </div>
+                        <div style="margin-top: 1rem;">
+                            <strong>Current Streak: 7 days</strong> 🔥<br>
+                            <small>Class Ranking: #3 out of 45 students</small>
+                        </div>
+                    </div>
+                `,
+                'analytics': `
+                    <h2 style="color: #667eea; margin-bottom: 1rem;">📊 Teacher Dashboard Demo</h2>
+                    <div style="background: #f8fafc; padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
+                        <h3>Class 10-A Performance Overview</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem; margin: 1rem 0;">
+                            <div style="text-align: center; padding: 1rem; background: white; border-radius: 8px;">
+                                <div style="font-size: 1.5rem; color: #22c55e; font-weight: bold;">78%</div>
+                                <small>Average Score</small>
+                            </div>
+                            <div style="text-align: center; padding: 1rem; background: white; border-radius: 8px;">
+                                <div style="font-size: 1.5rem; color: #3b82f6; font-weight: bold;">42/45</div>
+                                <small>Active Students</small>
+                            </div>
+                            <div style="text-align: center; padding: 1rem; background: white; border-radius: 8px;">
+                                <div style="font-size: 1.5rem; color: #f59e0b; font-weight: bold;">3</div>
+                                <small>Need Attention</small>
+                            </div>
+                        </div>
+                        <div style="background: white; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                            <strong>Recent Activity:</strong><br>
+                            • Rahul completed Fire Safety module<br>
+                            • Priya earned "First Aid Expert" badge<br>
+                            • 5 students need to retake earthquake quiz<br>
+                        </div>
+                    </div>
+                `,
+                'certification': `
+                    <h2 style="color: #667eea; margin-bottom: 1rem;">🏆 Digital Certification Demo</h2>
+                    <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 2rem; border-radius: 15px; margin: 1rem 0; text-align: center;">
+                        <h3 style="margin-bottom: 1rem;">CERTIFICATE OF COMPLETION</h3>
+                        <div style="font-size: 1.2rem; margin: 1rem 0;">
+                            This certifies that<br>
+                            <strong style
