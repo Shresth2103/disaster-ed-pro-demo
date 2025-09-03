@@ -683,98 +683,122 @@
                             This certifies that<br>
                             <strong style
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>DisasterED Pro - Demo</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DisasterED Pro Demo</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f5f5f5; margin: 0; padding: 0; }
+    .container { max-width: 400px; margin: 50px auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+    h2 { text-align: center; }
+    input, button { width: 100%; padding: 10px; margin: 8px 0; border-radius: 5px; border: 1px solid #ccc; }
+    button { background: #1976d2; color: white; cursor: pointer; }
+    button:hover { background: #1565c0; }
+    #status { text-align: center; margin-top: 10px; font-weight: bold; }
+  </style>
 </head>
 <body>
-  <h1>DisasterED Pro</h1>
 
-  <h2>Login / Signup</h2>
-  <input id="email" type="email" placeholder="Email"><br>
-  <input id="password" type="password" placeholder="Password"><br>
-  <button onclick="signUp()">Sign Up</button>
-  <button onclick="login()">Login</button>
-  <p id="authStatus"></p>
+  <div class="container">
+    <h2>DisasterED Pro</h2>
 
-  <h2>Progress</h2>
-  <button onclick="saveProgress()">Save Progress</button>
-  <button onclick="getProgress()">Get Progress</button>
-  <pre id="progressData"></pre>
+    <!-- Signup form -->
+    <h3>Sign Up</h3>
+    <input type="email" id="signupEmail" placeholder="Email" />
+    <input type="password" id="signupPassword" placeholder="Password" />
+    <button onclick="signup()">Sign Up</button>
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js"></script>
+    <!-- Login form -->
+    <h3>Login</h3>
+    <input type="email" id="loginEmail" placeholder="Email" />
+    <input type="password" id="loginPassword" placeholder="Password" />
+    <button onclick="login()">Login</button>
 
-  <script>
-    // 🔧 Replace with YOUR Firebase config
+    <!-- Save progress -->
+    <h3>Save Progress</h3>
+    <input type="text" id="moduleName" placeholder="Module Name (e.g., Fire Safety)" />
+    <input type="number" id="score" placeholder="Score (%)" />
+    <button onclick="saveProgress()">Save Progress</button>
+
+    <div id="status"></div>
+  </div>
+
+  <!-- Firebase SDKs -->
+  <script type="module">
+    // Import Firebase modules
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    // Your Firebase config
     const firebaseConfig = {
-      apiKey: "AIzaSyXXXX...",
-      authDomain: "disaster-ed-pro.firebaseapp.com",
-      projectId: "disaster-ed-pro",
-      storageBucket: "disaster-ed-pro.appspot.com",
-      messagingSenderId: "1234567890",
-      appId: "1:1234567890:web:abc123"
+      apiKey: "AIzaSyBK9TZzazFtV26JcjQUngrEdsyw87f1uXc",
+      authDomain: "disastered-pro-demo.firebaseapp.com",
+      projectId: "disastered-pro-demo",
+      storageBucket: "disastered-pro-demo.appspot.com", // double-check this in console
+      messagingSenderId: "750943106849",
+      appId: "1:750943106849:web:09ae61b28c4c964c887060",
+      measurementId: "G-C8C2DCF7T0"
     };
 
     // Init Firebase
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-    // Sign Up
-    function signUp() {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      auth.createUserWithEmailAndPassword(email, password)
-        .then(user => {
-          document.getElementById("authStatus").innerText = "Signed up: " + email;
-        })
-        .catch(err => alert(err.message));
+    // Helpers
+    const statusDiv = document.getElementById("status");
+    function setStatus(msg, color="black") {
+      statusDiv.style.color = color;
+      statusDiv.innerText = msg;
     }
 
-    // Login
-    function login() {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      auth.signInWithEmailAndPassword(email, password)
-        .then(user => {
-          document.getElementById("authStatus").innerText = "Logged in: " + email;
-        })
-        .catch(err => alert(err.message));
-    }
+    // Signup function
+    window.signup = async function() {
+      const email = document.getElementById("signupEmail").value;
+      const password = document.getElementById("signupPassword").value;
+      try {
+        await createUserWithEmailAndPassword(auth, email, password);
+        setStatus("✅ Signup successful!", "green");
+      } catch (error) {
+        setStatus("❌ " + error.message, "red");
+      }
+    };
 
-    // Save Progress (demo: Fire Safety score = 85)
-    function saveProgress() {
+    // Login function
+    window.login = async function() {
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        setStatus("✅ Login successful!", "green");
+      } catch (error) {
+        setStatus("❌ " + error.message, "red");
+      }
+    };
+
+    // Save progress
+    window.saveProgress = async function() {
       const user = auth.currentUser;
       if (!user) {
-        alert("Login first!");
+        setStatus("⚠️ Please login first!", "orange");
         return;
       }
-      db.collection("progress").doc(user.uid).set({
-        fireSafety: 85,
-        updatedAt: new Date()
-      }, { merge: true })
-      .then(() => alert("Progress saved!"));
-    }
-
-    // Get Progress
-    function getProgress() {
-      const user = auth.currentUser;
-      if (!user) {
-        alert("Login first!");
-        return;
+      const moduleName = document.getElementById("moduleName").value;
+      const score = document.getElementById("score").value;
+      try {
+        await setDoc(
+          doc(db, "progress", user.uid + "_" + moduleName),
+          { userId: user.uid, module: moduleName, score: Number(score), timestamp: new Date() }
+        );
+        setStatus(`✅ Progress saved for ${moduleName}!`, "green");
+      } catch (error) {
+        setStatus("❌ " + error.message, "red");
       }
-      db.collection("progress").doc(user.uid).get()
-        .then(doc => {
-          if (doc.exists) {
-            document.getElementById("progressData").innerText = JSON.stringify(doc.data(), null, 2);
-          } else {
-            document.getElementById("progressData").innerText = "No progress yet!";
-          }
-        });
-    }
+    };
   </script>
 </body>
 </html>
