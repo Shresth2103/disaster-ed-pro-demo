@@ -689,99 +689,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>DisasterED Pro</title>
   <link rel="stylesheet" href="style.css" />
-
-  <!-- Firebase SDK (v10, CDN imports) -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-    // Your Firebase config (replace storageBucket if needed)
-    const firebaseConfig = {
-      apiKey: "AIzaSyBK9TZzazFtV26JcjQUngrEdsyw87f1uXc",
-      authDomain: "disastered-pro-demo.firebaseapp.com",
-      projectId: "disastered-pro-demo",
-      storageBucket: "disastered-pro-demo.appspot.com",
-      messagingSenderId: "750943106849",
-      appId: "1:750943106849:web:09ae61b28c4c964c887060",
-      measurementId: "G-C8C2DCF7T0"
-    };
-
-    // Init Firebase
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    // --- Modal helpers ---
-    window.openModal = (id) => {
-      document.getElementById(id).style.display = "block";
-    };
-    window.closeModal = (id) => {
-      document.getElementById(id).style.display = "none";
-    };
-
-    // --- Signup ---
-    window.handleSignup = async () => {
-      const email = document.getElementById("loginEmail").value;
-      const password = document.getElementById("loginPassword").value;
-      try {
-        await createUserWithEmailAndPassword(auth, email, password);
-        alert("✅ Signed up as " + email);
-        closeModal("loginModal");
-      } catch (err) {
-        alert("❌ " + err.message);
-      }
-    };
-
-    // --- Login ---
-    window.handleLogin = async (event) => {
-      event.preventDefault();
-      const email = document.getElementById("loginEmail").value;
-      const password = document.getElementById("loginPassword").value;
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-        alert("🎓 Welcome " + email);
-        closeModal("loginModal");
-        loadStudentDashboard();
-      } catch (err) {
-        alert("❌ " + err.message);
-      }
-    };
-
-    // --- Save Progress ---
-    window.saveModuleProgress = async (moduleName, score) => {
-      const user = auth.currentUser;
-      if (!user) {
-        alert("⚠️ Please login first!");
-        return;
-      }
-      try {
-        await setDoc(
-          doc(db, "progress", user.uid),
-          { [moduleName]: score, updatedAt: new Date() },
-          { merge: true }
-        );
-        console.log("✅ Progress saved:", moduleName, score);
-        loadStudentDashboard();
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    // --- Load Dashboard ---
-    window.loadStudentDashboard = async () => {
-      const user = auth.currentUser;
-      if (!user) return;
-      const docRef = doc(db, "progress", user.uid);
-      const snap = await getDoc(docRef);
-      if (snap.exists()) {
-        const data = snap.data();
-        document.querySelector(".stat-number").innerText = (data.fireSafety || 0) + "%";
-        document.querySelector(".badges-count").innerText = data.badges || 0;
-        document.querySelector(".modules-count").innerText = data.modules || 0;
-      }
-    };
-  </script>
 </head>
 <body>
   <!-- Hero Section -->
@@ -827,10 +734,110 @@
       <form onsubmit="handleLogin(event)">
         <input type="email" placeholder="Email" id="loginEmail" required><br>
         <input type="password" placeholder="Password" id="loginPassword" required><br>
-        <button type="submit">Login</button>
+        <button type="submit" class="btn">Login</button>
       </form>
-      <button onclick="handleSignup()">Sign Up</button>
+      <button onclick="handleSignup()" class="btn">Sign Up</button>
     </div>
   </div>
+
+  <!-- Firebase SDK & App Logic -->
+  <script type="module">
+    // Firebase imports
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    // Firebase config (your project settings)
+    const firebaseConfig = {
+      apiKey: "AIzaSyBK9TZzazFtV26JcjQUngrEdsyw87f1uXc",
+      authDomain: "disastered-pro-demo.firebaseapp.com",
+      projectId: "disastered-pro-demo",
+      storageBucket: "disastered-pro-demo.appspot.com",
+      messagingSenderId: "750943106849",
+      appId: "1:750943106849:web:09ae61b28c4c964c887060",
+      measurementId: "G-C8C2DCF7T0"
+    };
+
+    // Init Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // --- Modal helpers ---
+    window.openModal = (id) => { document.getElementById(id).style.display = "block"; };
+    window.closeModal = (id) => { document.getElementById(id).style.display = "none"; };
+
+    // --- Signup ---
+    window.handleSignup = async () => {
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
+      try {
+        await createUserWithEmailAndPassword(auth, email, password);
+        alert("✅ Signed up as " + email);
+        closeModal("loginModal");
+        loadStudentDashboard();
+      } catch (err) {
+        alert("❌ " + err.message);
+      }
+    };
+
+    // --- Login ---
+    window.handleLogin = async (event) => {
+      event.preventDefault();
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        alert("🎓 Welcome " + email);
+        closeModal("loginModal");
+        loadStudentDashboard();
+      } catch (err) {
+        alert("❌ " + err.message);
+      }
+    };
+
+    // --- Save Progress (call this from games/quizzes) ---
+    window.saveModuleProgress = async (moduleName, score) => {
+      const user = auth.currentUser;
+      if (!user) {
+        alert("⚠️ Please login first!");
+        return;
+      }
+      try {
+        await setDoc(
+          doc(db, "progress", user.uid),
+          { [moduleName]: score, updatedAt: new Date() },
+          { merge: true }
+        );
+        console.log("✅ Progress saved:", moduleName, score);
+        loadStudentDashboard();
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    // --- Load Dashboard ---
+    window.loadStudentDashboard = async () => {
+      const user = auth.currentUser;
+      if (!user) return;
+      const docRef = doc(db, "progress", user.uid);
+      const snap = await getDoc(docRef);
+      if (snap.exists()) {
+        const data = snap.data();
+        document.querySelector(".stat-number").innerText = (data.fireSafety || 0) + "%";
+        document.querySelector(".badges-count").innerText = data.badges || 0;
+        document.querySelector(".modules-count").innerText = data.modules || 0;
+      }
+    };
+
+    // --- Optional: Logout ---
+    window.handleLogout = async () => {
+      await signOut(auth);
+      alert("👋 Logged out");
+      document.querySelector(".stat-number").innerText = "0%";
+      document.querySelector(".badges-count").innerText = "0";
+      document.querySelector(".modules-count").innerText = "0";
+    };
+  </script>
 </body>
 </html>
