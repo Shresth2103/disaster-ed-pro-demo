@@ -1,10 +1,10 @@
 
 const lenis = new Lenis({
-    duration:2,
+    duration: 2,
     lerp: 0.1,
 });
 
-function raf(time){
+function raf(time) {
     lenis.raf(time);
     requestAnimationFrame(raf);
 }
@@ -16,46 +16,51 @@ function openModal(modalId) { document.getElementById(modalId).style.display = '
 function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
 
 function selectOption(element, isCorrect, feedbackId) {
-  const options = element.parentNode.querySelectorAll('.quiz-option');
-  options.forEach(opt => { opt.classList.remove('correct', 'incorrect'); opt.style.pointerEvents = 'none'; });
+    const options = element.parentNode.querySelectorAll('.quiz-option');
+    options.forEach(opt => { opt.classList.remove('correct', 'incorrect'); opt.style.pointerEvents = 'none'; });
 
-  const msgCorrect = '✅ Correct! Following teacher\'s instructions ensures orderly evacuation and everyone\'s safety.';
-  const msgWrong = '❌ Not quite right. Always follow your teacher\'s evacuation instructions for safety.';
+    const msgCorrect = '✅ Correct! Following teacher\'s instructions ensures orderly evacuation and everyone\'s safety.';
+    const msgWrong = '❌ Not quite right. Always follow your teacher\'s evacuation instructions for safety.';
 
-  if (isCorrect) {
-    element.classList.add('correct');
-    showFeedback(msgCorrect, 'green', feedbackId);
-  } else {
-    element.classList.add('incorrect');
-    options.forEach(opt => { if (opt.onclick && opt.onclick.toString().includes('true')) opt.classList.add('correct'); });
-    showFeedback(msgWrong, 'red', feedbackId);
-  }
-  const nextBtn = document.getElementById('nextBtn');
-  if (nextBtn) nextBtn.style.display = 'inline-block';
+    if (isCorrect) {
+        element.classList.add('correct');
+        showFeedback(msgCorrect, 'green', feedbackId);
+    } else {
+        element.classList.add('incorrect');
+        options.forEach(opt => { if (opt.onclick && opt.onclick.toString().includes('true')) opt.classList.add('correct'); });
+        showFeedback(msgWrong, 'red', feedbackId);
+    }
+    const nextBtn = document.getElementById('nextBtn');
+    if (nextBtn) nextBtn.style.display = 'inline-block';
 }
 
 function showFeedback(message, color, feedbackId) {
-  const targetId = feedbackId || 'quiz-feedback';
-  const feedback = document.getElementById(targetId);
-  if (!feedback) return;
-  feedback.textContent = message; feedback.style.color = color; feedback.style.display = 'block';
+    const targetId = feedbackId || 'quiz-feedback';
+    const feedback = document.getElementById(targetId);
+    if (!feedback) return;
+    feedback.textContent = message; feedback.style.color = color; feedback.style.display = 'block';
 }
 
+//onlicking next question in live demo
 function nextSimulation() {
-  alert('🎉 Great job! In the full platform, you\'d continue to the next disaster scenario. Your progress has been saved!');
-  if (window.saveModuleProgress) { try { window.saveModuleProgress('fireSafety', 75); } catch (e) { } }
-  closeModal('demoModal');
+    // alert('🎉 Great job! In the full platform, you\'d continue to the next disaster scenario. Your progress has been saved!');
+    // if (window.saveModuleProgress) { try { window.saveModuleProgress('fireSafety', 75); } catch (e) { } }
+    // closeModal('demoModal');
+
+    const modalContent = document.querySelector("#demoModal");
+    modalContent.innerHTML
+
 }
 
 function startSimulation() {
-  alert('🔥 Fire Safety Simulation Starting...\n\nIn the full version, this would launch an interactive 3D simulation where you navigate through evacuation procedures!');
+    alert('🔥 Fire Safety Simulation Starting...\n\nIn the full version, this would launch an interactive 3D simulation where you navigate through evacuation procedures!');
 }
 
 // Feature Demos
 function showFeatureDemo(feature) {
-  const content = document.getElementById('featureContent');
-  const demoContent = {
-    'simulations': `
+    const content = document.getElementById('featureContent');
+    const demoContent = {
+        'simulations': `
                     <h2 style="color: #667eea; margin-bottom: 1rem;">🌍 Interactive Simulations Demo</h2>
                     <div style="background: #f8fafc; padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
                         <h3>🔥 Fire Evacuation Simulation</h3>
@@ -73,7 +78,7 @@ function showFeatureDemo(feature) {
                         <button class="btn" onclick="alert('🎮 In the full version, this would launch a 3D interactive simulation!')">Launch 3D Simulation</button>
                     </div>
                 `,
-    'gamification': `
+        'gamification': `
                     <h2 style="color: #667eea; margin-bottom: 1rem;">🎮 Gamified Learning Demo</h2>
                     <div style="background: #f8fafc; padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
                         <h3>Student Achievement System</h3>
@@ -100,7 +105,7 @@ function showFeatureDemo(feature) {
                         </div>
                     </div>
                 `,
-    'analytics': `
+        'analytics': `
                     <h2 style="color: #667eea; margin-bottom: 1rem;">📊 Teacher Dashboard Demo</h2>
                     <div style="background: #f8fafc; padding: 1.5rem; border-radius: 10px; margin: 1rem 0;">
                         <h3>Class 10-A Performance Overview</h3>
@@ -126,7 +131,7 @@ function showFeatureDemo(feature) {
                         </div>
                     </div>
                 `,
-    'certification': `
+        'certification': `
                     <h2 style="color: #667eea; margin-bottom: 1rem;">🏆 Digital Certification Demo</h2>
                     <div class="cert-card">
                         <div class="cert-inner">
@@ -141,7 +146,7 @@ function showFeatureDemo(feature) {
                         </div>
                     </div>
                 `,
-    'mobile': `
+        'mobile': `
                     <h2 style="color: #667eea; margin-bottom: 1rem;">📱 Mobile-First Experience</h2>
                     <div style="background:#f8fafc; padding:1.5rem; border-radius:10px;">
                         <p>Optimized layout scales beautifully on phones and tablets. Touch-friendly buttons, large tap targets, and offline-ready modules (PWA-ready in roadmap).</p>
@@ -152,7 +157,7 @@ function showFeatureDemo(feature) {
                         </ul>
                     </div>
                 `,
-    'localization': `
+        'localization': `
                     <h2 style="color: #667eea; margin-bottom: 1rem;">🌐 Localization & Regional Content</h2>
                     <div style="background:#f8fafc; padding:1.5rem; border-radius:10px;">
                         <p>Content tailored to Indian regions, hazards, and languages. Example pack:</p>
@@ -163,20 +168,20 @@ function showFeatureDemo(feature) {
                         </ul>
                     </div>
                 `
-  };
-  content.innerHTML = demoContent[feature] || '<p>Demo coming soon.</p>';
-  openModal('featureModal');
+    };
+    content.innerHTML = demoContent[feature] || '<p>Demo coming soon.</p>';
+    openModal('featureModal');
 }
 
 // Auth modal toggling (login/signup) — UI only; actions handled in Firebase block
 let authMode = 'login';
 function toggleAuthMode(e) {
-  if (e) e.preventDefault();
-  authMode = authMode === 'login' ? 'signup' : 'login';
-  document.getElementById('authTitle').textContent = authMode === 'login' ? 'Login to DisasterED Pro' : 'Create your DisasterED Pro account';
-  document.getElementById('authSubmitBtn').textContent = authMode === 'login' ? 'Sign In' : 'Sign Up';
-  document.getElementById('authToggleCopy').textContent = authMode === 'login' ? 'New user?' : 'Already have an account?';
-  document.getElementById('authToggleLink').textContent = authMode === 'login' ? 'Create Account' : 'Sign In';
+    if (e) e.preventDefault();
+    authMode = authMode === 'login' ? 'signup' : 'login';
+    document.getElementById('authTitle').textContent = authMode === 'login' ? 'Login to DisasterED Pro' : 'Create your DisasterED Pro account';
+    document.getElementById('authSubmitBtn').textContent = authMode === 'login' ? 'Sign In' : 'Sign Up';
+    document.getElementById('authToggleCopy').textContent = authMode === 'login' ? 'New user?' : 'Already have an account?';
+    document.getElementById('authToggleLink').textContent = authMode === 'login' ? 'Create Account' : 'Sign In';
 }
 
 // This is intercepted by Firebase block below

@@ -157,20 +157,10 @@
 
     <!-- Demo Modal -->
     <div id="demoModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal('demoModal')">&times;</span>
-            <h2 style="color: #667eea; margin-bottom: 1rem;">🔥 Fire Safety Simulation</h2>
-            <p style="margin-bottom: 1rem;"><strong>Scenario:</strong> You're in your classroom when the fire alarm rings. What's your first action?</p>
-            <div class="quiz-container">
-                <div class="quiz-option" onclick="selectOption(this, false)">🏃‍♂️ Run to the nearest exit immediately</div>
-                <div class="quiz-option" onclick="selectOption(this, false)">📱 Call your parents first</div>
-                <div class="quiz-option" onclick="selectOption(this, true)">✋ Stop, listen to teacher's instructions, and follow evacuation protocol</div>
-                <div class="quiz-option" onclick="selectOption(this, false)">🎒 Pack your belongings quickly</div>
-            </div>
-            <div id="quiz-feedback" style="margin-top: 1rem; font-weight: bold; display: none;"></div>
-            <button class="btn" onclick="nextSimulation()" style="margin-top: 1rem; display: none;" id="nextBtn">Next Scenario →</button>
-        </div>
-    </div>
+  <div class="modal-content" id="modalContent">
+    <!-- Question will be injected here -->
+  </div>
+</div>
 
     <!-- Flood Quiz Modal -->
     <div id="floodQuiz" class="modal">
@@ -227,3 +217,4 @@
 
     <!-- Firebase SDK & App Logic (module) -->
     <script src="main.js"></script> 
+    <script src="main_us.js"></script> 
