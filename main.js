@@ -1,4 +1,17 @@
 
+const lenis = new Lenis({
+    duration:2,
+    lerp: 0.1,
+});
+
+function raf(time){
+    lenis.raf(time);
+    requestAnimationFrame(raf);
+}
+
+requestAnimationFrame(raf);
+
+
 function openModal(modalId) { document.getElementById(modalId).style.display = 'flex'; }
 function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
 
