@@ -12,10 +12,10 @@ body {
       color: #fff;
       overflow: hidden;
       cursor: pointer;
-      background-color: #d62839;
-      /* background: rgba(255, 255, 255, 0.95)); */
+      background: linear-gradient(135deg, rgb(242, 65, 65), #660101,#500104);
+     
       background-size: 400% 400%;
-      animation: gradient 12s ease infinite;
+      /* animation: gradient 12s ease infinite; */
     }
 
     @keyframes gradient {
@@ -50,7 +50,7 @@ body {
       font-size: 3rem;
       font-weight: bold;
       margin: 1.5rem 0;
-      text-shadow: 2px 2px 8px rgba(0,0,0,0.4);
+      /* text-shadow: 2px 2px 8px rgba(0,0,0,0.4); */
       transition: opacity 0.6s ease;
       padding: 0 1rem;
       max-width: 90%;
@@ -72,10 +72,7 @@ body {
       transition: all 0.3s ease;
     }
 
-    /* .ambulance{
-      padding:15px 70px 20px 70px;
-    } */
-
+  
     .call-btn:hover {
       background: #a4161a;
       color:white;
