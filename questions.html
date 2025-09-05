@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fire Safety Simulation - DisasterED Pro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .simulation-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .header {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.8em;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .progress-container {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 15px;
+        }
+
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            height: 8px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: #fff;
+            height: 100%;
+            border-radius: 5px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 8px;
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .scenario-title {
+            font-size: 1.3em;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .scenario-text {
+            font-size: 1.1em;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #ff6b6b;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .option {
+            padding: 15px 20px;
+            border: 2px solid #e0e6ed;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1em;
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        .option.selected {
+            border-color: #667eea;
+            background: #f0f2ff;
+        }
+
+        .option.correct {
+            border-color: #28a745;
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .option.incorrect {
+            border-color: #dc3545;
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .feedback {
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-weight: 500;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 25px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .score-container {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .score-container h2 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .final-score {
+            font-size: 3em;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .completion-message {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .simulation-container {
+                margin: 10px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="simulation-container">
+        <div class="header">
+            <h1>🔥 Fire Safety Simulation</h1>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-text" id="progressText">Question 1 of 9</div>
+            </div>
+        </div>
+
+        <div class="content" id="questionContainer">
+            <!-- Questions will be loaded here -->
+        </div>
+
+        <div id="completionScreen" style="display: none;">
+            <div class="score-container">
+                <h2>🎉 Simulation Complete!</h2>
+                <div class="final-score" id="finalScore">8/9</div>
+                <div class="completion-message">
+                    Great job! You've mastered fire safety basics. Remember these life-saving skills!
+                </div>
+                <div class="controls">
+                    <button class="btn btn-primary" onclick="restartSimulation()">Try Again</button>
+                    <button class="btn btn-secondary" onclick="window.close()">Exit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                title: "Classroom Fire Emergency",
+                scenario: "You're in your classroom when the fire alarm rings. What's your first action?",
+                options: [
+                    { text: "🏃‍♂️ Run to the nearest exit immediately", emoji: "🏃‍♂️", correct: false },
+                    { text: "📞 Call your parents first", emoji: "📞", correct: false },
+                    { text: "👂 Stop, listen to teacher's instructions, and follow evacuation protocol", emoji: "👂", correct: true },
+                    { text: "🎒 Pack your belongings quickly", emoji: "🎒", correct: false }
+                ],
+                feedback: {
+                    correct: "✅ Excellent! Always follow your teacher's evacuation instructions for safety.",
+                    incorrect: "❌ Not quite right. Always follow your teacher's evacuation instructions for safety."
+                }
+            },
+            {
+                title: "Kitchen Fire Emergency",
+                scenario: "You're in the school cafeteria when oil in a pan catches fire. What should you do?",
+                options: [
+                    { text: "💧 Pour water on the oil fire", emoji: "💧", correct: false },
+                    { text: "🔥 Turn off heat source and cover with a lid to cut off oxygen", emoji: "🔥", correct: true },
+                    { text: "🏃‍♀️ Run away immediately", emoji: "🏃‍♀️", correct: false },
+                    { text: "🍳 Try to move the burning pan", emoji: "🍳", correct: false }
+                ],
+                feedback: {
+                    correct: "✅ Perfect! Cutting off oxygen supply by covering the pan is the right approach for oil fires.",
+                    incorrect: "❌ Water on oil fires makes them spread! Always cut off oxygen supply by covering the pan."
+                }
+            },
+            {
+                title: "Electrical Fire Emergency",
+                scenario: "You notice sparks and smoke coming from an electrical outlet. Your first action should be?",
+                options: [
+                    { text: "⚡ Turn off the main electrical switch/breaker", emoji: "⚡", correct: true },
+                    { text: "💧 Pour water on the electrical source", emoji: "💧", correct: false },
+                    { text: "👋 Touch the outlet to check if it's hot", emoji: "👋", correct: false },
+                    { text: "🔌 Continue using other electrical devices", emoji: "🔌", correct: false }
+                ],
+                feedback: {
+                    correct: "✅ Great! Always cut off electrical power first - never use water on electrical fires!",
+                    incorrect: "❌ Never use water on electrical fires! Always turn off the power source first."
+                }
+            },
+            {
+                title: "Smoke-Filled Corridor",
+                scenario: "The hallway is filled with thick smoke. How should you move?",
+                options: [
+                    { text: "🚶‍♂️ Walk normally standing upright", emoji: "🚶‍♂️", correct: false },
+                    { text: "🏃‍♂️ Run as fast as possible", emoji: "🏃‍♂️", correct: false },
+                    { text: "🐛 Crawl low to the ground, staying below the smoke", emoji: "🐛", correct: true },
+                    { text: "🪑 Wait for someone to rescue you", emoji: "🪑", correct: false }
+                ],
+                feedback: {
+                    correct: "✅ Excellent! Crawling low keeps you below toxic smoke and helps you breathe cleaner air.",
+                    incorrect: "❌ Remember: crawl low under smoke! Clean air stays closer to the ground."
+                }
+            },
+            {
+                title: "Blocked Exit Route",
+                scenario: "Your primary exit is blocked by fire. What's your next step?",
+                options: [
+                    { text: "🔥 Try to run through the fire", emoji: "🔥", correct: false },
+                    { text: "🏠 Hide under a desk", emoji: "🏠", correct: false },
+                    { text: "🚪 Use the alternate exit route you learned during drills", emoji: "🚪", correct: true },
+                    { text: "🪟 Break a window immediately", emoji: "🪟", correct: false }
+                ],
+                feedback: {
+                    correct: "✅ Perfect! This is why we practice fire drills - to know alternate escape routes!",
+                    incorrect: "❌ Never run through fire! Always use alternate exit routes learned in fire drills."
+                }
+            },
+            {
+                title: "Fire Triangle Knowledge",
+                scenario: "What three elements does fire need to survive? (Understanding this helps you put out fires effectively)",
+                options: [
+                    { text: "💧 Water, air, and heat", emoji: "💧", correct: false },
+                    { text: "🔺 Oxygen, heat, and fuel", emoji: "🔺", correct: true },
+                    { text: "💨 Smoke, flames, and ash", emoji: "💨", correct: false },
+                    { text: "⚛️ Carbon, hydrogen, and oxygen", emoji: "⚛️", correct: false }
+                ],
+                feedback: {
+                    correct: "✅ Correct! Remove any one element (oxygen, heat, or fuel) and the fire goes out!",
+                    incorrect: "❌ The fire triangle consists of oxygen, heat, and fuel. Remove any one to stop the fire!"
+                }
+            },
+            {
+                title: "Fire Extinguisher Types",
+                scenario: "Which fire extinguisher should be used for electrical fires in your school's computer lab?",
+                options: [
+                    { text: "💧 Water-based extinguisher", emoji: "💧", correct: false },
+                    { text: "🫧 Foam extinguisher", emoji: "🫧", correct: false },
+                    { text: "❄️ CO2 (Carbon Dioxide) extinguisher", emoji: "❄️", correct: true },
+                    { text: "🏖️ Sand", emoji: "🏖️", correct: false }
+                ],
+                feedback: {
+                    correct: "✅ Right! CO2 extinguishers don't conduct electricity and are safe for electrical fires.",
+                    incorrect: "❌ CO2 extinguishers are safest for electrical fires - water conducts electricity!"
+                }
+            },
+            {
+                title: "Emergency Contact",
+                scenario: "What's the fire emergency number you should call in India?",
+                options: [
+                    { text: "👮‍♂️ 100 (Police)", emoji: "👮‍♂️", correct: false },
+                    { text: "🚒 101 (Fire Department)", emoji: "🚒", correct: true },
+                    { text: "🚑 102 (Ambulance)", emoji: "🚑", correct: false },
+                    { text: "🆘 108 (Emergency)", emoji: "🆘", correct: false }
+                ],
+                feedback: {
+                    correct: "✅ Perfect! 101 connects you directly to the Fire Department across India.",
+                    incorrect: "❌ Remember: 101 is for Fire Department emergencies in India. Save this number!"
+                }
+            },
+            {
+                title: "Personal Safety - Clothing Fire",
+                scenario: "If your clothes catch fire, what should you immediately do?",
+                options: [
+                    { text: "🏃‍♂️ Run to get help", emoji: "🏃‍♂️", correct: false },
+                    { text: "🔄 Stop, Drop, and Roll", emoji: "🔄", correct: true },
+                    { text: "💧 Pour water on yourself", emoji: "💧", correct: false },
+                    { text: "👕 Remove clothes immediately", emoji: "👕", correct: false }
+                ],
+                feedback: {
+                    correct: "✅ Excellent! Stop, Drop, and Roll smothers the flames by cutting off oxygen supply.",
+                    incorrect: "❌ Stop, Drop, and Roll! Running makes fire worse. This technique saves lives!"
+                }
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let selectedOption = null;
+
+        function loadQuestion() {
+            const question = questions[currentQuestion];
+            const container = document.getElementById('questionContainer');
+            
+            container.innerHTML = `
+                <div class="scenario-title">${question.title}</div>
+                <div class="scenario-text">${question.scenario}</div>
+                <div class="options-container">
+                    ${question.options.map((option, index) => `
+                        <div class="option" onclick="selectOption(${index})">
+                            <span style="font-size: 1.2em;">${option.emoji}</span>
+                            <span>${option.text}</span>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="feedback" id="feedback"></div>
+                <div class="controls">
+                    <button class="btn btn-primary" onclick="checkAnswer()" id="checkBtn" disabled>Check Answer</button>
+                    <button class="btn btn-secondary" onclick="nextQuestion()" id="nextBtn" style="display: none;">Next Question →</button>
+                </div>
+            `;
+
+            updateProgress();
+        }
+
+        function selectOption(index) {
+            // Remove previous selections
+            document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+            
+            // Add selection to clicked option
+            document.querySelectorAll('.option')[index].classList.add('selected');
+            
+            selectedOption = index;
+            document.getElementById('checkBtn').disabled = false;
+        }
+
+        function checkAnswer() {
+            const question = questions[currentQuestion];
+            const options = document.querySelectorAll('.option');
+            const feedback = document.getElementById('feedback');
+            
+            // Disable further selection
+            options.forEach(opt => opt.style.pointerEvents = 'none');
+            
+            // Show correct/incorrect styling
+            question.options.forEach((option, index) => {
+                if (option.correct) {
+                    options[index].classList.add('correct');
+                } else if (index === selectedOption) {
+                    options[index].classList.add('incorrect');
+                }
+            });
+
+            // Show feedback
+            if (question.options[selectedOption].correct) {
+                feedback.className = 'feedback correct show';
+                feedback.textContent = question.feedback.correct;
+                score++;
+            } else {
+                feedback.className = 'feedback incorrect show';
+                feedback.textContent = question.feedback.incorrect;
+            }
+
+            // Show next button
+            document.getElementById('checkBtn').style.display = 'none';
+            
+            if (currentQuestion === questions.length - 1) {
+                document.getElementById('nextBtn').textContent = 'View Results';
+            }
+            document.getElementById('nextBtn').style.display = 'inline-block';
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            
+            if (currentQuestion >= questions.length) {
+                showCompletion();
+            } else {
+                selectedOption = null;
+                loadQuestion();
+            }
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressText').textContent = `Question ${currentQuestion + 1} of ${questions.length}`;
+        }
+
+        function showCompletion() {
+            document.getElementById('questionContainer').style.display = 'none';
+            document.getElementById('completionScreen').style.display = 'block';
+            
+            const percentage = Math.round((score / questions.length) * 100);
+            document.getElementById('finalScore').textContent = `${score}/${questions.length} (${percentage}%)`;
+            
+            // Update completion message based on score
+            const completionMessage = document.querySelector('.completion-message');
+            if (percentage >= 90) {
+                completionMessage.textContent = "Outstanding! You're a fire safety expert! 🏆";
+            } else if (percentage >= 70) {
+                completionMessage.textContent = "Great job! You have solid fire safety knowledge! 🌟";
+            } else if (percentage >= 50) {
+                completionMessage.textContent = "Good effort! Review the concepts and try again! 📚";
+            } else {
+                completionMessage.textContent = "Keep learning! Fire safety knowledge saves lives! 💪";
+            }
+
+            // Update progress to 100%
+            document.getElementById('progressFill').style.width = '100%';
+            document.getElementById('progressText').textContent = 'Completed!';
+        }
+
+        function restartSimulation() {
+            currentQuestion = 0;
+            score = 0;
+            selectedOption = null;
+            document.getElementById('questionContainer').style.display = 'block';
+            document.getElementById('completionScreen').style.display = 'none';
+            loadQuestion();
+        }
+
+        // Initialize the simulation
+        loadQuestion();
+    </script>
+</body>
+</html>
