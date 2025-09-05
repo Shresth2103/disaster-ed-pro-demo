@@ -4,6 +4,10 @@
     box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     line-height: 1.6;
@@ -122,11 +126,16 @@ main {
 
 .features-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(2, 1fr); /* 2 columns */
     gap: 2rem;
     margin-top: 3rem;
 }
 
+@media (max-width: 700px) {
+    .features-grid {
+        grid-template-columns: 1fr; /* switch to 1 column */
+    }
+}
 .feature-card {
     background: white;
     padding: 2rem;
@@ -315,7 +324,7 @@ footer {
     padding: 2rem 0;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
     .hero h1 {
         font-size: 2.5rem;
     }
