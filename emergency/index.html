@@ -4,94 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Emergency - DisasterED Pro</title>
-  <style>
-    body {
-      user-select: none;
-      margin: 0;
-      padding: 0;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      color: #fff;
-      overflow: hidden;
-      cursor: pointer;
-      background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #ffdde1, #fcb69f);
-      background-size: 400% 400%;
-      animation: gradient 12s ease infinite;
-    }
-
-    @keyframes gradient {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    header {
-      position: absolute;
-      top: 0;
-      width: 100%;
-      background: rgba(0, 0, 0, 0.3);
-      color: #fff;
-      padding: 1rem;
-      text-align: center;
-      font-size: 1.5rem;
-      font-weight: bold;
-      letter-spacing: 1px;
-    }
-
-    .subheading {
-      font-size: 1.4rem;
-      font-weight: 500;
-      opacity: 0.85;
-      margin-bottom: 1rem;
-      text-shadow: 1px 1px 6px rgba(0,0,0,0.3);
-    }
-
-    .tip {
-      font-size: 3rem;
-      font-weight: bold;
-      margin: 1.5rem 0;
-      text-shadow: 2px 2px 8px rgba(0,0,0,0.4);
-      transition: opacity 0.6s ease;
-      padding: 0 1rem;
-      max-width: 90%;
-      user-select: none;
-    }
-
-    .call-btn {
-      display: inline-block;
-      background: #d62839;
-      color: white;
-      font-size: 1.6rem;
-      font-weight: bold;
-      padding: 1.2rem 3rem;
-      border-radius: 14px;
-      text-decoration: none;
-      margin-top: 2rem;
-      box-shadow: 0 0 20px rgba(214, 40, 57, 0.8);
-      transition: all 0.3s ease;
-    }
-
-    .call-btn:hover {
-      background: #a4161a;
-      transform: scale(1.08);
-      box-shadow: 0 0 28px rgba(214, 40, 57, 1);
-    }
-
-    footer {
-      position: absolute;
-      bottom: 1rem;
-      width: 100%;
-      text-align: center;
-      font-size: 0.9rem;
-      opacity: 0.8;
-      text-shadow: 1px 1px 4px rgba(0,0,0,0.3);
-    }
-  </style>
+  <link rel="stylesheet" href="../styles/emergency.css">
+  
 </head>
 <body onclick="nextTip()">
   <header>🚨 Emergency Help</header>
@@ -101,7 +15,10 @@
     Stay Calm
   </div>
 
-  <a href="tel:100" class="call-btn">📞 Call 100</a>
+  <a href="tel:108" class="call-btn">📞 Call Emergency Services</a>
+  <a href="tel:102" class="call-btn ambulance">📞 Call Ambulance</a>
+  <a href="tel:112" class="call-btn woman">📞 Call Women Helpline</a>
+  <a href="tel:1098" class="call-btn child">📞 Call Child Helpline</a>
 
   <footer>
     ⚠️ Follow local authority instructions during any emergency.

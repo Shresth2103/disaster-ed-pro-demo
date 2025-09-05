@@ -242,6 +242,7 @@
                 font-size: 1.5em;
             }
         }
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     </style>
 </head>
 <body>
@@ -270,6 +271,9 @@
                 <div class="controls">
                     <button class="btn btn-primary" onclick="restartSimulation()">Try Again</button>
                     <button class="btn btn-secondary" onclick="window.close()">Exit</button>
+                    <button class="btn btn-success" onclick="generateCertificate()">📜 Download Certificate</button>
+                    <!-- Find your existing buttons and modify like this -->
+
                 </div>
             </div>
         </div>
@@ -533,6 +537,111 @@
 
         // Initialize the simulation
         loadQuestion();
+        // Add this function to your existing JavaScript
+function generateCertificate() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    // Get student details
+    const studentName = prompt("Enter student name:") || "Student";
+    const schoolName = prompt("Enter school name:") || "School";
+    const percentage = Math.round((score / questions.length) * 100);
+    const date = new Date().toLocaleDateString('en-IN');
+    
+    // Certificate background
+    doc.setFillColor(240, 248, 255);
+    doc.rect(0, 0, 210, 297, 'F');
+    
+    // Header
+    doc.setFillColor(102, 126, 234);
+    doc.rect(0, 0, 210, 40, 'F');
+    
+    // Title
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(24);
+    doc.setFont("helvetica", "bold");
+    doc.text('CERTIFICATE OF COMPLETION', 105, 25, { align: 'center' });
+    
+    // DisasterED Pro Logo
+    doc.setFontSize(16);
+    doc.text('🚨 DisasterED Pro', 105, 35, { align: 'center' });
+    
+    // Main content
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(18);
+    doc.setFont("helvetica", "normal");
+    doc.text('This is to certify that', 105, 70, { align: 'center' });
+    
+    // Student name
+    doc.setFontSize(28);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(102, 126, 234);
+    doc.text(studentName, 105, 90, { align: 'center' });
+    
+    // School name
+    doc.setFontSize(16);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(0, 0, 0);
+    doc.text(`from ${schoolName}`, 105, 105, { align: 'center' });
+    
+    // Achievement text
+    doc.setFontSize(14);
+    doc.text('has successfully completed the', 105, 125, { align: 'center' });
+    
+    // Course name
+    doc.setFontSize(20);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(220, 53, 69);
+    doc.text('🔥 FIRE SAFETY TRAINING', 105, 145, { align: 'center' });
+    
+    // Score
+    doc.setFontSize(16);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(0, 0, 0);
+    doc.text(`Score: ${score}/${questions.length} (${percentage}%)`, 105, 165, { align: 'center' });
+    
+    // Performance message
+    let performanceMsg = "";
+    if (percentage >= 90) performanceMsg = "Outstanding Performance! 🏆";
+    else if (percentage >= 70) performanceMsg = "Great Job! 🌟";
+    else if (percentage >= 50) performanceMsg = "Good Effort! 📚";
+    else performanceMsg = "Keep Learning! 💪";
+    
+    doc.setFontSize(14);
+    doc.setTextColor(102, 126, 234);
+    doc.text(performanceMsg, 105, 180, { align: 'center' });
+    
+    // Date
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0);
+    doc.text(`Date: ${date}`, 105, 200, { align: 'center' });
+    
+    // Bottom section
+    doc.setFontSize(10);
+    doc.text('This certificate validates the completion of disaster preparedness training', 105, 220, { align: 'center' });
+    doc.text('designed to enhance emergency response skills and save lives.', 105, 230, { align: 'center' });
+    
+    // Signature area
+    doc.setDrawColor(102, 126, 234);
+    doc.setLineWidth(1);
+    doc.line(30, 260, 80, 260);
+    doc.line(130, 260, 180, 260);
+    
+    doc.setFontSize(10);
+    doc.text('Instructor', 55, 270, { align: 'center' });
+    doc.text('DisasterED Pro', 155, 270, { align: 'center' });
+    
+    // Footer
+    doc.setFillColor(102, 126, 234);
+    doc.rect(0, 280, 210, 17, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(10);
+    doc.text('Smart India Hackathon 2025 | Saving Lives Through Education', 105, 290, { align: 'center' });
+    
+    // Save the PDF
+    const fileName = `Fire_Safety_Certificate_${studentName.replace(/\s+/g, '_')}_${date.replace(/\//g, '-')}.pdf`;
+    doc.save(fileName);
+}
     </script>
 </body>
 </html>
