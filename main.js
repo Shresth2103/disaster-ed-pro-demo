@@ -186,3 +186,7 @@ function toggleAuthMode(e) {
 
 // This is intercepted by Firebase block below
 function handleLogin(event) { event.preventDefault(); }
+function startSimulation() {
+    // This will open the fire safety simulation in a new window/tab
+    window.open('questions.html', '_blank', 'width=900,height=700,scrollbars=yes,resizable=yes');
+}
