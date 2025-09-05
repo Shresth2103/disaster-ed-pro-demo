@@ -20,10 +20,11 @@ body {
 
 header {
     background: rgba(255, 255, 255, 0.95);
+    padding: 8px;
     backdrop-filter: blur(10px);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     position: fixed;
-    top: 0;
+    top: 1px;;
     left: 0;
     right: 0;
     z-index: 1000;
@@ -64,7 +65,7 @@ nav {
 }
 
 .btn {
-    background: linear-gradient(45deg, #667eea, #764ba2);
+    background: linear-gradient(20deg, #5e73d0, #4b41b5);
     color: white;
     padding: 0.6rem 1.5rem;
     border: none;
@@ -377,9 +378,9 @@ nav .button:hover {
 
 /* Add a pulsing alert effect */
 @keyframes pulse {
-    0% { box-shadow: 0 0 10px rgba(230, 57, 70, 0.6); }
-    50% { box-shadow: 0 0 20px rgba(230, 57, 70, 1); }
-    100% { box-shadow: 0 0 10px rgba(230, 57, 70, 0.6); }
+    0% { box-shadow: 0 0 10px rgba(250, 247, 247, 0.6); }
+    50% { box-shadow: 0 0 20px rgb(219, 219, 219); }
+    100% { box-shadow: 0 0 10px rgba(239, 233, 234, 0.6); }
 }
 
 nav .button {
