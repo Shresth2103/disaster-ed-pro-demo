@@ -386,5 +386,14 @@ nav .button:hover {
 nav .button {
     animation: pulse 1.5s infinite;
 }
+.btn-success {
+    background: linear-gradient(45deg, #28a745, #20c997);
+    color: white;
+}
+
+.btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+}
 
 
