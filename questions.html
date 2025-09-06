@@ -200,6 +200,15 @@
             background: #5a6268;
         }
 
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
         .score-container {
             text-align: center;
             padding: 30px;
@@ -225,6 +234,54 @@
             margin-bottom: 20px;
         }
 
+        .continue-learning {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            border: 2px solid #e9ecef;
+        }
+
+        .continue-title {
+            font-size: 1.4em;
+            color: #495057;
+            margin-bottom: 15px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .learning-questions {
+            display: grid;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .learning-question {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .learning-question h4 {
+            color: #495057;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        .learning-question p {
+            color: #6c757d;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .learning-answer {
+            color: #28a745;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
         @media (max-width: 768px) {
             .simulation-container {
                 margin: 10px;
@@ -242,16 +299,9 @@
                 font-size: 1.5em;
             }
         }
-        btn-success {
-            background: #28a745;
-            color: white;
-        }
-
-        .btn-success:hover {
-            background: #218838;
-        }
     </style>
-    
+    <!-- Include jsPDF library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
     <div class="simulation-container">
@@ -279,15 +329,60 @@
                 <div class="controls">
                     <button class="btn btn-primary" onclick="restartSimulation()">Try Again</button>
                     <button class="btn btn-secondary" onclick="window.close()">Exit</button>
-                    <button class="btn" id="downloadBtn" onclick="generateCertificate()">📄 Download Certificate</button>
-                    <!-- Find your existing buttons and modify like this -->
+                    <button class="btn btn-success" id="downloadBtn" onclick="generateCertificate()">📄 Download Certificate</button>
+                </div>
+            </div>
 
+            <!-- Continue Learning Section -->
+            <div class="continue-learning">
+                <div class="continue-title">📚 Continue Learning - Key Fire Safety Facts</div>
+                <div class="learning-questions">
+                    <div class="learning-question">
+                        <h4>🔥 What is the "Fire Triangle"?</h4>
+                        <p>Understanding the three elements fire needs to survive helps you know how to extinguish it effectively.</p>
+                        <div class="learning-answer">Answer: Fire needs Oxygen, Heat, and Fuel. Remove any one element to stop the fire!</div>
+                    </div>
+
+                    <div class="learning-question">
+                        <h4>🚨 Why should you never use water on electrical fires?</h4>
+                        <p>This is one of the most dangerous mistakes people make during emergencies.</p>
+                        <div class="learning-answer">Answer: Water conducts electricity and can cause electrocution. Always turn off power first and use CO2 extinguishers.</div>
+                    </div>
+
+                    <div class="learning-question">
+                        <h4>🐛 Why do we crawl during fire evacuations?</h4>
+                        <p>Understanding smoke behavior can save your life in a real emergency.</p>
+                        <div class="learning-answer">Answer: Hot smoke rises, so cooler, cleaner air stays near the floor. Crawling keeps you below toxic gases.</div>
+                    </div>
+
+                    <div class="learning-question">
+                        <h4>🔄 What does "Stop, Drop, and Roll" achieve?</h4>
+                        <p>This life-saving technique works on a simple scientific principle.</p>
+                        <div class="learning-answer">Answer: Rolling smothers flames by cutting off oxygen supply. Running makes fires spread faster!</div>
+                    </div>
+
+                    <div class="learning-question">
+                        <h4>📞 Emergency Numbers in India</h4>
+                        <p>Quick reference for fire emergencies across India.</p>
+                        <div class="learning-answer">Answer: 101 - Fire Department | 100 - Police | 102 - Ambulance | 108 - Emergency Services</div>
+                    </div>
+
+                    <div class="learning-question">
+                        <h4>🏠 Home Fire Safety Checklist</h4>
+                        <p>Prevention is always better than response. Regular safety checks save lives.</p>
+                        <div class="learning-answer">Answer: Check smoke detectors monthly, plan escape routes, keep fire extinguishers accessible, and never overload electrical outlets.</div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="btn btn-primary" onclick="showMoreLearning()">🧠 Show More Learning Resources</button>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
+        // Define all variables and functions first
         const questions = [
             {
                 title: "Classroom Fire Emergency",
@@ -422,8 +517,14 @@
         let selectedOption = null;
 
         function loadQuestion() {
+            console.log('Loading question:', currentQuestion); // Debug log
             const question = questions[currentQuestion];
             const container = document.getElementById('questionContainer');
+            
+            if (!container) {
+                console.error('Question container not found!');
+                return;
+            }
             
             container.innerHTML = `
                 <div class="scenario-title">${question.title}</div>
@@ -506,8 +607,11 @@
 
         function updateProgress() {
             const progress = ((currentQuestion + 1) / questions.length) * 100;
-            document.getElementById('progressFill').style.width = progress + '%';
-            document.getElementById('progressText').textContent = `Question ${currentQuestion + 1} of ${questions.length}`;
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            
+            if (progressFill) progressFill.style.width = progress + '%';
+            if (progressText) progressText.textContent = `Question ${currentQuestion + 1} of ${questions.length}`;
         }
 
         function showCompletion() {
@@ -543,118 +647,147 @@
             loadQuestion();
         }
 
-        // Initialize the simulation
-        loadQuestion();
+        function generateCertificate() {
+            // Check if jsPDF is available
+            if (typeof window.jsPDF === 'undefined') {
+                alert('Certificate generation is temporarily unavailable. Please try again later.');
+                return;
+            }
 
-  // Example certificate content
-  doc.setFontSize(20);
-  doc.text("🏅 DisasterED Pro Certificate", 20, 30);
-  doc.setFontSize(12);
-  doc.text("This certifies that you successfully completed the simulation.", 20, 50);
+            // Get student details
+            const studentName = prompt("Enter student name:") || "Student";
+            const schoolName = prompt("Enter school name:") || "School";
+            const percentage = Math.round((score / questions.length) * 100);
+            const date = new Date().toLocaleDateString('en-IN');
+            
+            // Create new PDF document
+            const { jsPDF } = window.jsPDF;
+            const doc = new jsPDF();
+            
+            // Certificate background
+            doc.setFillColor(240, 248, 255);
+            doc.rect(0, 0, 210, 297, 'F');
+            
+            // Header
+            doc.setFillColor(102, 126, 234);
+            doc.rect(0, 0, 210, 40, 'F');
+            
+            // Title
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(24);
+            doc.setFont("helvetica", "bold");
+            doc.text('CERTIFICATE OF COMPLETION', 105, 25, { align: 'center' });
+            
+            // DisasterED Pro Logo
+            doc.setFontSize(16);
+            doc.text('🚨 DisasterED Pro', 105, 35, { align: 'center' });
+            
+            // Main content
+            doc.setTextColor(0, 0, 0);
+            doc.setFontSize(18);
+            doc.setFont("helvetica", "normal");
+            doc.text('This is to certify that', 105, 70, { align: 'center' });
+            
+            // Student name
+            doc.setFontSize(28);
+            doc.setFont("helvetica", "bold");
+            doc.setTextColor(102, 126, 234);
+            doc.text(studentName, 105, 90, { align: 'center' });
+            
+            // School name
+            doc.setFontSize(16);
+            doc.setFont("helvetica", "normal");
+            doc.setTextColor(0, 0, 0);
+            doc.text(`from ${schoolName}`, 105, 105, { align: 'center' });
+            
+            // Achievement text
+            doc.setFontSize(14);
+            doc.text('has successfully completed the', 105, 125, { align: 'center' });
+            
+            // Course name
+            doc.setFontSize(20);
+            doc.setFont("helvetica", "bold");
+            doc.setTextColor(220, 53, 69);
+            doc.text('FIRE SAFETY TRAINING', 105, 145, { align: 'center' });
+            
+            // Score
+            doc.setFontSize(16);
+            doc.setFont("helvetica", "normal");
+            doc.setTextColor(0, 0, 0);
+            doc.text(`Score: ${score}/${questions.length} (${percentage}%)`, 105, 165, { align: 'center' });
+            
+            // Performance message
+            let performanceMsg = "";
+            if (percentage >= 90) performanceMsg = "Outstanding Performance!";
+            else if (percentage >= 70) performanceMsg = "Great Job!";
+            else if (percentage >= 50) performanceMsg = "Good Effort!";
+            else performanceMsg = "Keep Learning!";
+            
+            doc.setFontSize(14);
+            doc.setTextColor(102, 126, 234);
+            doc.text(performanceMsg, 105, 180, { align: 'center' });
+            
+            // Date
+            doc.setFontSize(12);
+            doc.setTextColor(0, 0, 0);
+            doc.text(`Date: ${date}`, 105, 200, { align: 'center' });
+            
+            // Bottom section
+            doc.setFontSize(10);
+            doc.text('This certificate validates the completion of disaster preparedness training', 105, 220, { align: 'center' });
+            doc.text('designed to enhance emergency response skills and save lives.', 105, 230, { align: 'center' });
+            
+            // Signature area
+            doc.setDrawColor(102, 126, 234);
+            doc.setLineWidth(1);
+            doc.line(30, 260, 80, 260);
+            doc.line(130, 260, 180, 260);
+            
+            doc.setFontSize(10);
+            doc.text('Instructor', 55, 270, { align: 'center' });
+            doc.text('DisasterED Pro', 155, 270, { align: 'center' });
+            
+            // Footer
+            doc.setFillColor(102, 126, 234);
+            doc.rect(0, 280, 210, 17, 'F');
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(10);
+            doc.text('Smart India Hackathon 2025 | Saving Lives Through Education', 105, 290, { align: 'center' });
+            
+            // Save the PDF
+            const fileName = `Fire_Safety_Certificate_${studentName.replace(/\s+/g, '_')}_${date.replace(/\//g, '-')}.pdf`;
+            doc.save(fileName);
+        }
 
-  // Save the file
-  doc.save("DisasterED_Certificate.pdf");
-}
-    // Get student details
-    const studentName = prompt("Enter student name:") || "Student";
-    const schoolName = prompt("Enter school name:") || "School";
-    const percentage = Math.round((score / questions.length) * 100);
-    const date = new Date().toLocaleDateString('en-IN');
-    
-    // Certificate background
-    doc.setFillColor(240, 248, 255);
-    doc.rect(0, 0, 210, 297, 'F');
-    
-    // Header
-    doc.setFillColor(102, 126, 234);
-    doc.rect(0, 0, 210, 40, 'F');
-    
-    // Title
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(24);
-    doc.setFont("helvetica", "bold");
-    doc.text('CERTIFICATE OF COMPLETION', 105, 25, { align: 'center' });
-    
-    // DisasterED Pro Logo
-    doc.setFontSize(16);
-    doc.text('🚨 DisasterED Pro', 105, 35, { align: 'center' });
-    
-    // Main content
-    doc.setTextColor(0, 0, 0);
-    doc.setFontSize(18);
-    doc.setFont("helvetica", "normal");
-    doc.text('This is to certify that', 105, 70, { align: 'center' });
-    
-    // Student name
-    doc.setFontSize(28);
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(102, 126, 234);
-    doc.text(studentName, 105, 90, { align: 'center' });
-    
-    // School name
-    doc.setFontSize(16);
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(0, 0, 0);
-    doc.text(`from ${schoolName}`, 105, 105, { align: 'center' });
-    
-    // Achievement text
-    doc.setFontSize(14);
-    doc.text('has successfully completed the', 105, 125, { align: 'center' });
-    
-    // Course name
-    doc.setFontSize(20);
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(220, 53, 69);
-    doc.text('🔥 FIRE SAFETY TRAINING', 105, 145, { align: 'center' });
-    
-    // Score
-    doc.setFontSize(16);
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(0, 0, 0);
-    doc.text(`Score: ${score}/${questions.length} (${percentage}%)`, 105, 165, { align: 'center' });
-    
-    // Performance message
-    let performanceMsg = "";
-    if (percentage >= 90) performanceMsg = "Outstanding Performance! 🏆";
-    else if (percentage >= 70) performanceMsg = "Great Job! 🌟";
-    else if (percentage >= 50) performanceMsg = "Good Effort! 📚";
-    else performanceMsg = "Keep Learning! 💪";
-    
-    doc.setFontSize(14);
-    doc.setTextColor(102, 126, 234);
-    doc.text(performanceMsg, 105, 180, { align: 'center' });
-    
-    // Date
-    doc.setFontSize(12);
-    doc.setTextColor(0, 0, 0);
-    doc.text(`Date: ${date}`, 105, 200, { align: 'center' });
-    
-    // Bottom section
-    doc.setFontSize(10);
-    doc.text('This certificate validates the completion of disaster preparedness training', 105, 220, { align: 'center' });
-    doc.text('designed to enhance emergency response skills and save lives.', 105, 230, { align: 'center' });
-    
-    // Signature area
-    doc.setDrawColor(102, 126, 234);
-    doc.setLineWidth(1);
-    doc.line(30, 260, 80, 260);
-    doc.line(130, 260, 180, 260);
-    
-    doc.setFontSize(10);
-    doc.text('Instructor', 55, 270, { align: 'center' });
-    doc.text('DisasterED Pro', 155, 270, { align: 'center' });
-    
-    // Footer
-    doc.setFillColor(102, 126, 234);
-    doc.rect(0, 280, 210, 17, 'F');
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(10);
-    doc.text('Smart India Hackathon 2025 | Saving Lives Through Education', 105, 290, { align: 'center' });
-    
-    // Save the PDF
-    const fileName = `Fire_Safety_Certificate_${studentName.replace(/\s+/g, '_')}_${date.replace(/\//g, '-')}.pdf`;
-    doc.save(fileName);
-}
+        function showMoreLearning() {
+            alert('More learning resources coming soon! Check back for advanced fire safety modules, earthquake preparedness, and flood response training.');
+        }
+
+        // Initialize when page loads - try multiple methods
+        function initializeSimulation() {
+            console.log('Initializing simulation...');
+            if (document.getElementById('questionContainer')) {
+                loadQuestion();
+            } else {
+                console.error('Question container not found during initialization!');
+            }
+        }
+
+        // Try immediate initialization
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeSimulation);
+        } else {
+            // DOM is already loaded
+            initializeSimulation();
+        }
+
+        // Fallback for window load
+        window.addEventListener('load', function() {
+            if (!document.getElementById('questionContainer').innerHTML.trim()) {
+                console.log('Fallback initialization...');
+                initializeSimulation();
+            }
+        });
     </script>
 </body>
 </html>
