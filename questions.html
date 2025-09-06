@@ -251,8 +251,6 @@
             background: #218838;
         }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.min.js"></script>
-    <script src="questions.js" defer></script>
     
 </head>
 <body>
@@ -547,17 +545,6 @@
 
         // Initialize the simulation
         loadQuestion();
-        
-
-        // Add this function to your existing JavaScript
-   function generateCertificate() {
-  if (!window.jspdf) {
-    alert("⚠️ PDF library is still loading. Please try again in a moment.");
-    return;
-  }
-
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
 
   // Example certificate content
   doc.setFontSize(20);
