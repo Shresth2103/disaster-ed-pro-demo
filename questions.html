@@ -242,8 +242,17 @@
                 font-size: 1.5em;
             }
         }
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+        btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.min.js"></script>
+    
 </head>
 <body>
     <div class="simulation-container">
@@ -539,8 +548,12 @@
         loadQuestion();
         // Add this function to your existing JavaScript
 function generateCertificate() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
+    if (typeof window.jsPDF === 'undefined') {
+        alert('PDF library is still loading. Please try again in a moment.');
+        return;
+    }
+    
+    const doc = new window.jsPDF();
     
     // Get student details
     const studentName = prompt("Enter student name:") || "Student";
