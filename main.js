@@ -181,6 +181,47 @@ function startSimulation() {
 
 // --------------------------------------------------------
 
+const home_btn = document.querySelector('.home-btn');
+const about_btn = document.querySelector('.about-btn');
+const features_btn = document.querySelector('.features-btn');
+const demo_btn = document.querySelector('.demo-btn');
+
+home_btn.addEventListener('click', () => {
+    lenis.scrollTo('#home', {
+        duration: 2, 
+        lerp: 0.1,
+    })
+})
+
+about_btn.addEventListener('click', ()=> {
+    lenis.scrollTo('#about', {
+        duration: 2, 
+        lerp: 0.1,
+    })
+})
+
+features_btn.addEventListener('click', () => {
+    lenis.scrollTo('#features', {
+        duration: 2,
+        lerp:0.1,
+    })
+})
+
+demo_btn.addEventListener('click', () => {
+    lenis.scrollTo('#demo', {
+        duration: 2, 
+        lerp: 0.1,
+    })
+})
+
+about_btn.addEventListener('click', () => {
+    lenis.scrollTo('#about', {
+        duration: 2, 
+        lerp: 0.1,
+    })
+})
+
+
 // Weather API Integration
 const API_KEY = "d5e1cb20784b4677aa4184213250509";
 let weatherData = null;
@@ -464,3 +505,4 @@ function showFeatureDemo(feature) {
     openModal('featureModal');
     console.log("Modal should be opened");
 }
+
