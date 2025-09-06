@@ -548,13 +548,19 @@
         loadQuestion();
         // Add this function to your existing JavaScript
 function generateCertificate() {
-    if (typeof window.jsPDF === 'undefined') {
+    if (typeof window.jspdf === 'undefined' && typeof window.jsPDF === 'undefined') {
         alert('PDF library is still loading. Please try again in a moment.');
         return;
     }
-    
-    const doc = new window.jsPDF();
-    
+    let doc;
+    if (window.jspdf && window.jspdf.jsPDF) {
+        doc = new window.jspdf.jsPDF();
+    } else if (window.jsPDF) {
+        doc = new window.jsPDF();
+    } else {
+        alert('PDF library not available');
+        return;
+    }
     // Get student details
     const studentName = prompt("Enter student name:") || "Student";
     const schoolName = prompt("Enter school name:") || "School";
