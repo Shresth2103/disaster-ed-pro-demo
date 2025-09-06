@@ -252,6 +252,7 @@
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.min.js"></script>
+    <script src="questions.js" defer></script>
     
 </head>
 <body>
@@ -280,7 +281,7 @@
                 <div class="controls">
                     <button class="btn btn-primary" onclick="restartSimulation()">Try Again</button>
                     <button class="btn btn-secondary" onclick="window.close()">Exit</button>
-                    <button class="btn btn-success" onclick="generateCertificate()">📜 Download Certificate</button>
+                    <button class="btn" id="downloadBtn" onclick="generateCertificate()">📄 Download Certificate</button>
                     <!-- Find your existing buttons and modify like this -->
 
                 </div>
@@ -546,21 +547,27 @@
 
         // Initialize the simulation
         loadQuestion();
+        
+
         // Add this function to your existing JavaScript
-function generateCertificate() {
-    if (typeof window.jspdf === 'undefined' && typeof window.jsPDF === 'undefined') {
-        alert('PDF library is still loading. Please try again in a moment.');
-        return;
-    }
-    let doc;
-    if (window.jspdf && window.jspdf.jsPDF) {
-        doc = new window.jspdf.jsPDF();
-    } else if (window.jsPDF) {
-        doc = new window.jsPDF();
-    } else {
-        alert('PDF library not available');
-        return;
-    }
+   function generateCertificate() {
+  if (!window.jspdf) {
+    alert("⚠️ PDF library is still loading. Please try again in a moment.");
+    return;
+  }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  // Example certificate content
+  doc.setFontSize(20);
+  doc.text("🏅 DisasterED Pro Certificate", 20, 30);
+  doc.setFontSize(12);
+  doc.text("This certifies that you successfully completed the simulation.", 20, 50);
+
+  // Save the file
+  doc.save("DisasterED_Certificate.pdf");
+}
     // Get student details
     const studentName = prompt("Enter student name:") || "Student";
     const schoolName = prompt("Enter school name:") || "School";
