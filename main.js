@@ -1,14 +1,18 @@
-
 const lenis = new Lenis({
-    duration: 2,
-    lerp: 0.1,
+  duration: 2,
+  lerp: 0.1,
 });
 
-function raf(time) {
-    lenis.raf(time);
-    requestAnimationFrame(raf);
-}
+lenis.on("scroll", ({ scroll, limit, velocity, direction }) => {
+  console.log("Current position:", scroll);
+  console.log("Direction:", direction);
+});
 
+// Keep Lenis running
+function raf(time) {
+  lenis.raf(time);
+  requestAnimationFrame(raf);
+}
 requestAnimationFrame(raf);
 
 
